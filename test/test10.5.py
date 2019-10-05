@@ -2,8 +2,9 @@ import os
 import urllib
 import urllib2
 import json
-# import numpy as np
+import numpy as np
 from scipy import misc
+from scipy import signal
 # import cv2
 import base64
 from PIL import Image
@@ -81,6 +82,19 @@ def gettoken ():
         return
     # print(token)
 
+def alpha_conflate (alphaImage, flatSize):
+    # flatSize = 7
+    kernal = np.zeros((flatSize,flatSize))
+    kernal[:,:] = 0.11
+    alphaImage = signal.convolve2d(alphaImage, kernal, mode = 'same')
+    alphaImage = np.clip(alphaImage,0,0.01) * 100 #0-1
+    # alphaImage = 1-alphaImage
+    # alphaImage = alphaImage[:,:,np.newaxis]
+    # nohumanPic = originPic*alphaImage
+    # print("after human decrease:",nohumanPic.shape)
+    return alphaImage
+
+
 
 # Main Function From Here
 while True:
@@ -96,9 +110,9 @@ while True:
             filename = getAlpha(thecontent) #get and save
 
         alphaImage = misc.imread(filename)
+        alphaImage = alpha_conflate(alphaImage, 7)
         alphaImage = 255-alphaImage
         misc.imsave('dealpha.png', alphaImage)
-
 
         # merge newone(witout human) with oldone
         img1 = Image.open('new.jpg')
@@ -112,15 +126,18 @@ while True:
         # mergepic = misc.imread('merge.png')
         oldpic = misc.imread('old.jpg')
         diff = mergepic - oldpic
+        threshold = 20
+        diff[abs(diff) < threshold] = 0
 
         # diff from -255~255, need to compress, mind the way of coding
         diff_coded = (diff+255)/2
+
         misc.imsave('diff_coded.png', diff_coded)
 
         # need to handle the upload
         # FIXME
 
-    time.sleep(2)
+    time.sleep(1)
 
 
 
