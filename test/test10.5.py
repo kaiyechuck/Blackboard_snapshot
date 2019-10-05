@@ -95,6 +95,7 @@ def alpha_conflate (alphaImage, flatSize):
     return alphaImage
 
 
+
 # Main Function From Here
 while True:
     ts = capture(ts)
@@ -126,7 +127,9 @@ while True:
         oldpic = misc.imread('old.jpg')
         diff = mergepic - oldpic
         threshold = 20
+
         diff[abs(diff) < threshold] = 0
+        diff[255-abs(diff) < threshold] = 0
 
         # diff from -255~255, need to compress, mind the way of coding
         diff_coded = (diff+255)/2
