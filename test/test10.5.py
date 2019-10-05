@@ -95,7 +95,6 @@ def alpha_conflate (alphaImage, flatSize):
     return alphaImage
 
 
-
 # Main Function From Here
 while True:
     ts = capture(ts)
@@ -132,7 +131,7 @@ while True:
         # diff from -255~255, need to compress, mind the way of coding
         diff_coded = (diff+255)/2
 
-        misc.imsave('diff_coded.png', diff_coded)
+        misc.imsave('diff_coded.jpg', diff_coded)
 
         # need to handle the upload
         # FIXME
