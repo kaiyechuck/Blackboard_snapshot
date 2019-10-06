@@ -113,8 +113,11 @@ def alpha_conflate (alphaImage, flatSize):
 
 thetoken = gettoken()
 
+n = 10
+
 # Main Function From Here
-while True:
+while n:
+    n = n-1
     ts = capture(ts)
     # clean the human and merge with the oldone
     # getAlpha of human
