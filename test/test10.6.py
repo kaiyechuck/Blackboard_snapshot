@@ -27,7 +27,7 @@ def capture(ts):
 
         im = Image.open("new.jpg")
         im.thumbnail((200,200))
-        im.save("thumb.jpg", "JPEG")
+        im.save("thumb.jpg")
         return 2
 
     else:
@@ -39,7 +39,7 @@ def capture(ts):
 
         im = Image.open("new.jpg")
         im.thumbnail((200,200))
-        im.save("thumb.jpg", "JPEG")
+        im.save("thumb.jpg")
         return 2
 
     return ts
@@ -58,7 +58,7 @@ def getAlpha (content):
     # resize to original
     im = Image.open("alpha_positive.jpg")
     im_resized = im.resize(size, Image.ANTIALIAS)
-    im_resized.save("alpha_positive.jpg", "JEPG")
+    im_resized.save("alpha_positive.jpg")
 
     return filename
 
