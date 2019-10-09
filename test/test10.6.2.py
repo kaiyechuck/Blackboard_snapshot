@@ -10,7 +10,7 @@ import base64
 from PIL import Image
 import time
 import datetime
-
+import imageio
 
 
 ts = 0
@@ -130,22 +130,22 @@ while n:
             # print thecontent
             filename = getAlpha(thecontent) #get and save
 
-        alphaImage = misc.imread(filename)
+        alphaImage = imageio.imread(filename)
         alphaImage = alpha_conflate(alphaImage, 7)
         alphaImage = 255-alphaImage
-        misc.imsave('dealpha.png', alphaImage)
+        imageio.imwrite('dealpha.png', alphaImage)
 
         # merge newone(witout human) with oldone
         img1 = Image.open('new.jpg')
         img2 = Image.open('dealpha.png') #filename for alpha
         img3 = Image.open('old.jpg')
         mergepic = Image.composite(img1, img3, img2)
-        misc.imsave('temp.png', img1)
-        misc.imsave('new.jpg', mergepic)
+        imageio.imwrite('temp.png', img1)
+        imageio.imwrite('new.jpg', mergepic)
 
         # diff it with the oldone
-        # mergepic = misc.imread('merge.png')
-        oldpic = misc.imread('old.jpg')
+        # mergepic = imageio.imread('merge.png')
+        oldpic = imageio.imread('old.jpg')
         diff = mergepic - oldpic
         threshold = 20
 
@@ -155,7 +155,7 @@ while n:
         # diff from -255~255, need to compress, mind the way of coding
         diff_coded = (diff+255)/2
 
-        misc.imsave('diff_coded.jpg', diff_coded)
+        imageio.imwrite('diff_coded.jpg', diff_coded)
 
         # need to handle the upload
         # FIXME
