@@ -21,7 +21,7 @@ changeRatioThre = 0.0004 # experience value, no change at all"0.000111"
 # 0=newboard(not mature) 1=mature
 canNew = 0
 isWhiteBoard = 0
-is_local_test = 1
+is_local_test = 0
 # content needs to exceed 25%(newBoardRatio) to create a newboard
 current_board = 0
 resolution = 720
@@ -421,10 +421,3 @@ while n:
     # print("Image Updated",last_capture_time)
     print("Overall logging:\n" + "  time_stamp:" + str(time_stamp) + "\n  Current_Board:" + str(current_board) + "\n  Time Interval:"+ str(time_span))
     print("----------------")
-
-
-
-
-
-
-
