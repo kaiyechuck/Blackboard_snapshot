@@ -17,12 +17,12 @@ import upload
 ts = 0
 size = 1280, 720
 # 0.25 is 25% percent content, 0.03 is experiental pixel ratio
-newBoardRatio = 0.99*0.25 # for real, use0.03*0.25
+newBoardRatio = 0.03*0.25 # for real, use0.03*0.25
 changeRatioThre = 0.0004 # experience value, no change at all"0.000111"
 # 0=newboard(not mature) 1=mature
 canNew = 0
 isWhiteBoard = 0
-is_local_test = 1
+is_local_test = 0
 using_base = 0 # using base to segment instead of baidu cloud
 # using local macbook to process will take 8 seconds greater than cloud process (5s)
 
@@ -320,7 +320,7 @@ def detectUpdate(new, old):
 #main function starts here
 
 thetoken = gettoken()
-n = 10
+n = 20
 
 argv = sys.argv[1:]
 try:

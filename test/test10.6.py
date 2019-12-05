@@ -27,7 +27,7 @@ def capture(ts):
         os.system(myCmd)
 
         im = Image.open("new.jpg")
-        im.thumbnail((200,200))
+        im.thumbnail((700,700))
         im.save("thumb.jpg")
         return 2
 

@@ -27,7 +27,7 @@ isWhiteBoard = 0
 is_local_test = 0
 using_base = 0 # using base to segment instead of baidu cloud
 # using local macbook to process will take 8 seconds greater than cloud process (5s)
-transform = True
+transform = False
 
 # content needs to exceed 25%(newBoardRatio) to create a newboard
 current_board = 0
@@ -66,7 +66,7 @@ def transformImg(imgPath):
         print("debug:", size[0], size[1])
         # TODO [Preset]: change the coef before using
         tf.set_coeffs([(0, 0), (size[0], 0), (size[0], size[1]), (0, size[1])],
-                     [(64, 0), (size[0], 0), (size[0], size[1]), (318, 309)])
+                         [[133.,  14.],[526.,  32.],[560., 227.],[121., 252.]])
         img = tf.trans(img)
         img.save(imgPath)
 
@@ -330,7 +330,7 @@ def getbackraio(new, old, base):
     base = [0,0,0,0,0,0]
     """
 
-    lowerThre = 50
+    lowerThre = 50 # original 50
     if isWhiteBoard:
         # for whiteboard
         new_base = new_base*-1
@@ -403,6 +403,7 @@ else:
 
 # Main Function From Here
 while n:
+    print("Current N:", n)
     if ts == 0:
         path_dictionary = initpathdic()
         temp_basebaorddiff = 0
@@ -452,6 +453,11 @@ while n:
         # alphaImage = 255-alphaImage
         alphaImage = (1-alphaImage)*255
         misc.imsave(path_dictionary['dealpha'], alphaImage)
+        
+        if transform:
+            transformImg(path_dictionary['temp'])
+            transformImg(path_dictionary['new'])
+            transformImg(path_dictionary['dealpha'])
 
         # merge newone(witout human) with oldone
         img1 = Image.open(path_dictionary['new'])
@@ -459,13 +465,12 @@ while n:
         img3 = Image.open(path_dictionary['old'])
         img4 = Image.open(path_dictionary['base'])
 
+
         mergepic = Image.composite(img1, img3, img2)
         misc.imsave(path_dictionary['temp'], img1)
         misc.imsave(path_dictionary['new'], mergepic)
 
-        if transform:
-            transformImg(path_dictionary['temp'])
-            transformImg(path_dictionary['new'])
+
 
         # diff it with the oldone
         # mergepic = misc.imread('merge.png')
@@ -494,17 +499,20 @@ while n:
             # just erasing return 3 to save current image as temp
                 if_erasing = 1
                 print("[LOG]: just erasing", back_ratio)
-                misc.imsave(path_dictionary['before_erasing'], img3)
+                # misc.imsave(path_dictionary['before_erasing'], img3) # this is commented due to lack of stability
                 # if_new_rst = 3
+                
+        if n%3  == 0:
+            misc.imsave(path_dictionary['before_erasing'], img3) 
 
         if_new_rst = detectIfNew(back_ratio)
 
 
-        if if_new_rst == 1:
+        if if_new_rst == 1 and n%10 == 0:
             # retrive the before erasing picture and upload as final
-            # upload.upload_file(path_dictionary['before_erasing'], "boardsnapshot",object_name=es3_path)
-            # upload.upload_file(path_dictionary['old'], "boardsnapshot",object_name=es3_path+"test.jpg") # this is uploaded only for testing
-            # upload.upload_file(path_dictionary['old'], "boardsnapshot",object_name="test.jpg") # this is uploaded only for testing
+            upload.upload_file(path_dictionary['before_erasing'], "boardsnapshot",object_name=es3_path)
+            upload.upload_file(path_dictionary['old'], "boardsnapshot",object_name=es3_path+"test.jpg") # this is uploaded only for testing
+            upload.upload_file(path_dictionary['old'], "boardsnapshot",object_name="test.jpg") # this is uploaded only for testing
 
             # need to add new board function
             current_board = (current_board+1)%6
@@ -517,7 +525,7 @@ while n:
 
         else:
             # need to handle the upload
-            # upload.upload_file(path_dictionary['new'], "boardsnapshot",object_name=es3_path)
+            upload.upload_file(path_dictionary['new'], "boardsnapshot",object_name=es3_path)
 
             if if_new_rst == 2:
                 # not mature, waiting to write enough content

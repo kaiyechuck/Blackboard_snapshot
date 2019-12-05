@@ -3,8 +3,8 @@ import time
 import numpy as np
 
 tf = Transformer()
-usingCV2 = True
-resizeScale = 0.5
+usingCV2 = False #True
+resizeScale = 1
 points = 0
 refPt = []
 srcPoints = []
@@ -49,7 +49,7 @@ def click_and_transform(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN and points > 4:
         srcPoints = np.float32(refPt[0:4])*(1/resizeScale)
         cv2.putText(image, "Press ESC to exit, points are in log", (50,200),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
-        print("points: ", srcPoints)
+        print("points: ", srcPoints*resizeScale)
 
 if usingCV2:
     import cv2
@@ -63,7 +63,10 @@ if usingCV2:
 else:
     import os
     from scipy import misc
-    myCmd = 'fswebcam -r testFlight.jpg'
+    import cv2
+    myCmd = 'fswebcam -r 1280x720 testFlight.jpg'
     os.system(myCmd)
     alphaImage = misc.imread('testFlight.jpg')
+    img = cv2.imread('testFlight.jpg')
+    start_gather(img)
 
